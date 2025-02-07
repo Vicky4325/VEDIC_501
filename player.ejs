@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            margin: 0;
+        }
+        
+        .logout {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .logout a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .logout a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin: 0.5rem 0 0.25rem;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        ul li {
+            background-color: #f9f9f9;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+    </style>
+</head>
+<body id="player-dashboard">
+    <header>
+        <h1>Welcome, Player</h1>
+        <div class="logout">
+            <a href="/logout" id="logout">Logout</a>
+            <a href="/change-password" id="change-password">Change Password</a>
+        </div>
+    </header>
+    <main class="container">
+        <section id="sports-section">
+            <h2>Sports</h2>
+            <ul id="sports-list">
+                <% sports.forEach(function(sport) { %>
+                    <li><%= sport.name %></li>
+                <% }) %>
+            </ul>
+            <form action="/create-sport" method="POST">
+                <input type="text" name="name" placeholder="Sport Name" required>
+                <button type="submit">Add Sport</button>
+            </form>
+        </section>
+        <section id="sessions-section">
+            <h2>Available Sessions</h2>
+            <ul id="sessions-list">
+                <% sessions.forEach(function(session) { %>
+                    <li>
+                        <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> at <%= session.venue %> on <%= session.date %>
+                        - Players: <%= session.players.length %>
+                        <form action="/join-session" method="POST" style="display: inline;">
+                            <input type="hidden" name="session_id" value="<%= session.id %>">
+                            <button type="submit">Join Session</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="my-sessions-section">
+            <h2>My Sessions</h2>
+            <ul id="my-sessions-list">
+                <% joinedSessions.forEach(function(session) { %>
+                    <li>
+                        <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> at <%= session.venue %> on <%= session.date %>
+                    </li>
+                <% }) %>
+                <% sessions.forEach(function(session) { %>
+                    <% if (session.creator_id === user.id) { %>
+                        <li>
+                            <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> at <%= session.venue %> on <%= session.date %>
+                            <button onclick="showCancelModal('<%= session.id %>')">Cancel Session</button>
+                        </li>
+                    <% } %>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="create-session-section">
+            <h2>Create Session</h2>
+            <form id="create-session-form" action="/create-session" method="POST">
+                <label for="sport-id">Sport:</label>
+                <select name="sport_id" id="sport-id" required>
+                    <% sports.forEach(function(sport) { %>
+                        <option value="<%= sport.id %>"><%= sport.name %></option>
+                    <% }) %>
+                </select>
+                <label for="team1">Team 1:</label>
+                <input type="text" name="team1" id="team1" required>
+                <label for="team2">Team 2:</label>
+                <input type="text" name="team2" id="team2" required>
+                <label for="additional-players">Additional Players:</label>
+                <input type="number" name="additional_players" id="additional-players" required>
+                <label for="date">Date:</label>
+                <input type="datetime-local" name="date" id="date" required>
+                <label for="venue">Venue:</label>
+                <input type="text" name="venue" id="venue" required>
+                <button type="submit">Create Session</button>
+            </form>
+        </section>
+
+        <!-- Cancel Session Modal -->
+        <div id="cancelModal" style="display: none;">
+            <form id="cancel-session-form" action="/cancel-session" method="POST">
+                <input type="hidden" name="session_id" id="cancel-session-id">
+                <label for="cancel-reason">Reason for Cancelling:</label>
+                <input type="text" name="reason" id="cancel-reason" required>
+                <button type="submit">Cancel Session</button>
+                <button type="button" onclick="hideCancelModal()">Cancel</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function showCancelModal(sessionId) {
+            document.getElementById('cancel-session-id').value = sessionId;
+            document.getElementById('cancelModal').style.display = 'block';
+        }
+
+        function hideCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+        }
+
+        // Debugging: Ensure the form data is submitted correctly
+        document.getElementById('cancel-session-form').addEventListener('submit', function(event) {
+            const sessionId = document.getElementById('cancel-session-id').value;
+            const reason = document.getElementById('cancel-reason').value;
+            console.log('Cancel Session Form Submitted: ', { sessionId, reason });
+        });
+    </script>
+</body>
+
+
+
+</html>
