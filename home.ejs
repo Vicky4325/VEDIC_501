@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Scheduler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/images/background.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            background-color: rgba(0, 0, 0, 0.5);
+            background-blend-mode: overlay;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            color: white;
+            z-index: 2;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background-color: rgba(50, 46, 46, 0.5);
+        }
+        
+        .logo h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #FFFFFF;
+        }
+        
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        nav ul li {
+            margin-right: 30px;
+        }
+        
+        nav ul li a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 25px;
+            padding: 10px 15px;
+        }
+        
+        nav ul li a:hover {
+            color: #87CEEB;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            margin-top: 300px;
+            color: white;
+            padding: 20px;
+            z-index: 1;
+        }
+        
+        .welcome-message h1, .welcome-message p {
+            display: inline-block;
+            opacity: 0;
+        }
+        
+        .welcome-message h1 {
+            font-size: 48px;
+            margin: 0;
+            color: #FFFFFF;
+            display: block;
+        }
+        
+        .welcome-message p {
+            font-size: 24px;
+            margin: 10px 0 0;
+            color: #B0C4DE;
+        }
+        
+        .content {
+            margin-top: 400px; /* Adjust this value as needed */
+            background-color: #FFFFFF; /* Plain white background */
+        }
+        
+        .features {
+            padding: 20px;
+            margin-top: 0px;
+            text-align: center;
+            color: #333;
+            background-color: rgba(255, 255, 255);
+        }
+        
+        .features h2 {
+            font-size: 36px;
+            color: green;
+        }
+        
+        .features-list h3 {
+            font-size: 28px;
+            color: black;
+        }
+        
+        .features-list p {
+            font-size: 18px;
+        }
+        
+        .feedback-section {
+            padding: 20px;
+            margin:0 300px;
+            text-align: center;
+            color: #333;
+            background-color: rgba(255, 255, 255);
+            border-radius: 10px;
+            border: 3px solid black; /* Added black border */
+        }
+        
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+            margin: 0 auto;
+        }
+        
+        .feedback-form label {
+            font-size: 18px;
+            margin-top: 10px;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        
+        .feedback-form textarea {
+            height: 100px;
+        }
+        
+        .feedback-form button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: green;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .feedback-form button:hover {
+            background-color: blueviolet;
+        }
+        footer {
+            background-color: rgba(50, 46, 46, 0.9);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        footer .footer-content .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        footer .footer-content ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+        
+        footer .footer-content ul li {
+            margin-left: 20px;
+        }
+        
+        footer .footer-content ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        footer .footer-content ul li a:hover {
+            text-decoration: underline;
+        }
+        .spacer {
+            height: 50px; /* Adjust this value for more or less space */
+            background-color: #FFFFFF; /* White background */
+        }        
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <header>
+        <div class="logo">
+            <h1>Sports Scheduler</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="welcome-message">
+            <h1 id="welcome-title"></h1>
+            <p id="welcome-slogan"></p>
+        </div>
+        <div class="content">
+            <div class="features">
+                <h2>Features</h2>
+                <ul class="features-list">
+                    <li>
+                        <h3>Team Management</h3>
+                        <p>Create and manage teams for various sports activities. Assign players, update team details, and view team statistics.</p>
+                    </li>
+                    <li>
+                        <h3>Schedule Management</h3>
+                        <p>View and manage upcoming sports events, matches, and sessions. Filter by sport, date, and venue.</p>
+                    </li>
+                    <li>
+                        <h3>Player Registration</h3>
+                        <p>Players can register, update their profiles, and manage their participation in sports events.</p>
+                    </li>
+                    <li>
+                        <h3>Statistics and Reports</h3>
+                        <p>Generate reports on team performance, player statistics, and overall participation. Analyze trends and make data-driven decisions.</p>
+                    </li>
+                    <li>
+                        <h3>Notifications and Alerts</h3>
+                        <p>Receive notifications about schedule changes, upcoming events, and important announcements in real-time.</p>
+                    </li>
+                    <li>
+                        <h3>Administration Panel</h3>
+                        <p>Administrators have access to a dedicated dashboard to manage users, teams, sessions, and system settings.</p>
+                    </li>
+                    <hr>
+                </ul>
+            </div>
+            <div class="feedback-section">
+                <h2>Feedback</h2>
+                <div class="feedback-form">
+                    <form action="/submit-feedback" method="POST">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required />
+                        <br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required />
+                        <br>
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" required></textarea>
+                        <br>
+                        <button type="submit">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+            <div class="spacer"></div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Sports Scheduler. All rights reserved.</p>
+            <ul class="footer-links">
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/terms-of-service">Terms of Service</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const welcomeTitle = "Welcome To Sports Scheduler";
+            const welcomeSlogan = "Your Sports Event Planning Solution";
+            
+            typeWriterEffect("welcome-title", welcomeTitle, 100);
+            typeWriterEffect("welcome-slogan", welcomeSlogan, 100, welcomeTitle.length * 100 + 500);
+        });
+
+        function typeWriterEffect(elementId, text, speed, delay = 0) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            setTimeout(function() {
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        element.style.opacity = 1;
+                        setTimeout(type, speed);
+                    }
+                }
+                type();
+            }, delay);
+        }
+    </script>
+</body>
+</html>

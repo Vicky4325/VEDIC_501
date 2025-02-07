@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Reports</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            margin: 0;
+        }
+        
+        .logout {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .logout a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .logout a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin: 0.5rem 0 0.25rem;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        ul li {
+            background-color: #f9f9f9;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+    </style>
+</head>
+<body id="admin-reports">
+    <header>
+        <h1>Admin Reports</h1>
+        <div class="logout">
+            <a href="/admin-dashboard" id="dashboard">Dashboard</a>
+            <a href="/logout" id="logout">Logout</a>
+        </div>
+    </header>
+    <main class="container">
+        <section id="configurable-period-section">
+            <h2>Configure Time Period</h2>
+            <form id="configurable-period-form" action="/reports" method="GET">
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" name="startDate" required>
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date" name="endDate" required>
+                <button type="submit">Generate Report</button>
+            </form>
+        </section>
+        <section id="sessions-report-section">
+            <h2>Sessions Report</h2>
+            <p id="sessions-count">Total Sessions: <%= sessions.length %></p>
+            <ul id="session-reports-list">
+                <% sessions.forEach(function(session) { %>
+                    <li>
+                        <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> at <%= session.venue %> on <%= session.date %>
+                        - Players Joined: <%= session.players.length %>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="popularity-report-section">
+            <h2>Sports Popularity Report</h2>
+            <ul id="popularity-list">
+                <% popularity.forEach(function(sport) { %>
+                    <li><%= sport.name %>: <%= sport.count %> sessions</li>
+                <% }) %>
+            </ul>
+        </section>
+    </main>
+    
+    
+        
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            margin: 0;
+        }
+        
+        .logout {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .logout a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .logout a:hover {
+            text-decoration: underline;
+        }
+        
+        .container {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin: 0.5rem 0 0.25rem;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        ul li {
+            background-color: #f9f9f9;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .report-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .report-link:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
+</head>
+<body id="admin-dashboard">
+    <header>
+        <h1>Welcome, Admin</h1>
+        <div class="logout">
+            <a href="/logout" id="logout">Logout</a>
+            <a href="/change-password" id="change-password">Change Password</a>
+        </div>
+    </header>
+    <main class="container">
+        <section id="sports-section">
+            <h2>Sports</h2>
+            <ul id="sports-list">
+                <% sports.forEach(function(sport) { %>
+                    <li><%= sport.name %></li>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="create-sport-section">
+            <h2>Create Sport</h2>
+            <form id="create-sport-form" action="/create-sport" method="POST">
+                <label for="sport-name">Sport Name:</label>
+                <input type="text" name="name" id="sport-name" required>
+                <button type="submit">Create Sport</button>
+            </form>
+        </section>
+        <section id="sessions-section">
+            <h2>All Sessions</h2>
+            <ul id="sessions-list">
+                <% sessions.forEach(function(session) { %>
+                    <li>
+                        <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> by <%= session.creator_name %> at <%= session.venue %> on <%= session.date %>
+                        - Players: <%= session.players.length %>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="cancelled-sessions-section">
+            <h2>Cancelled Sessions</h2>
+            <ul id="cancelled-sessions-list">
+                <% cancelledSessions.forEach(function(session) { %>
+                    <li>
+                        <%= session.sport_name %>: <%= session.team1 %> vs <%= session.team2 %> by <%= session.creator_name %> at <%= session.venue %> on <%= session.date %>
+                        <p>Cancelled Reason: <%= session.cancellation_reason %></p>
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section id="create-session-section">
+            <h2>Create Session</h2>
+            <form id="create-session-form" action="/create-session" method="POST">
+                <label for="sport-id">Sport:</label>
+                <select name="sport_id" id="sport-id" required>
+                    <% sports.forEach(function(sport) { %>
+                        <option value="<%= sport.id %>"><%= sport.name %></option>
+                    <% }) %>
+                </select>
+                <label for="team1">Team 1:</label>
+                <input type="text" name="team1" id="team1" required>
+                <label for="team2">Team 2:</label>
+                <input type="text" name="team2" id="team2" required>
+                <label for="additional-players">Additional Players:</label>
+                <input type="number" name="additional_players" id="additional-players" required>
+                <label for="date">Date:</label>
+                <input type="datetime-local" name="date" id="date" required>
+                <label for="venue">Venue:</label>
+                <input type="text" name="venue" id="venue" required>
+                <button type="submit">Create Session</button>
+            </form>
+        </section>
+        <a href="/reports" class="report-link">View Reports</a>
+    </main>    
+</body>
+
+</html>
